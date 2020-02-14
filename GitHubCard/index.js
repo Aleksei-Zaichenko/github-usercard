@@ -3,11 +3,12 @@
            https://api.github.com/users/<your name>
 */
 
-
+/*
 axios.get("https://api.github.com/users/Aleksei-Zaichenko")
 .then(response => {
   console.log(response.data);
 })
+*/
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -38,30 +39,32 @@ axios.get("https://api.github.com/users/Aleksei-Zaichenko")
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
-
+/*
 function findAllFollowers(gitHubUrl){
-  
-  const arrayOfFollowers = gitHubUrl.data.map(item =>{
+
+  return gitHubUrl.data.map(item =>{
+
     return item.url;
   })
-
-  return arrayOfFollowers;
 }//end of findAllFollowers
+*/
 
-let followersArray = []
-
+const followersArray = [];
  axios.get("https://api.github.com/users/Aleksei-Zaichenko/followers")
- .then(response => {
-    console.log(followersArray = findAllFollowers(response));
- })
+    .then(response => {
 
-followersArray.forEach(item =>{
-  console.log(item);
-  axios.get(item)
-  .then(response => {
-    cards.append(createCard(response));
-  }).catch(error => {
-    console.log("the data was not returned", error);
+      response.data.forEach(item => {
+        followersArray.push(item.url);
+      });
+
+  followersArray.forEach(user => {
+    console.log(user);
+
+    axios.get(user)
+    .then( response =>{
+      cards.append(createCard(response));
+    })
+
   })
 })
 
