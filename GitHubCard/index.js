@@ -39,33 +39,21 @@ axios.get("https://api.github.com/users/Aleksei-Zaichenko")
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
-/*
-function findAllFollowers(gitHubUrl){
-
-  return gitHubUrl.data.map(item =>{
-
-    return item.url;
-  })
-}//end of findAllFollowers
-*/
 
 const followersArray = [];
+
  axios.get("https://api.github.com/users/Aleksei-Zaichenko/followers")
     .then(response => {
-
       response.data.forEach(item => {
-        followersArray.push(item.url);
-      });
-
-  followersArray.forEach(user => {
-    console.log(user);
-
-    axios.get(user)
-    .then( response =>{
-      cards.append(createCard(response));
-    })
-
-  })
+        axios.get(item.url)
+        .then( response =>{
+          cards.append(createCard(response));
+      }).catch(error => {
+           console.log("the data was not returned", error);
+          })
+      })//response.data.forEach
+    }).catch(error => {
+            console.log("the data was not returned", error);
 })
 
 /* Step 3: Create a function that accepts a single object as its only argument,
