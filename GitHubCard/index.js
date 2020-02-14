@@ -3,6 +3,7 @@
            https://api.github.com/users/<your name>
 */
 
+
 axios.get("https://api.github.com/users/Aleksei-Zaichenko")
 .then(response => {
   console.log(response.data);
@@ -38,15 +39,24 @@ axios.get("https://api.github.com/users/Aleksei-Zaichenko")
           user, and adding that card to the DOM.
 */
 
-const followersArray = [
-  'https://api.github.com/users/tetondan',
-  'https://api.github.com/users/dustinmyers',
-  'https://api.github.com/users/justsml',
-  'https://api.github.com/users/luishrd',
-  'https://api.github.com/users/bigknell',
-];
+function findAllFollowers(gitHubUrl){
+  
+  const arrayOfFollowers = gitHubUrl.data.map(item =>{
+    return item.url;
+  })
+
+  return arrayOfFollowers;
+}//end of findAllFollowers
+
+let followersArray = []
+
+ axios.get("https://api.github.com/users/Aleksei-Zaichenko/followers")
+ .then(response => {
+    console.log(followersArray = findAllFollowers(response));
+ })
 
 followersArray.forEach(item =>{
+  console.log(item);
   axios.get(item)
   .then(response => {
     cards.append(createCard(response));
@@ -108,9 +118,14 @@ function createCard(githubURL){
   following.textContent = 'Following: ' + githubURL.data.following;
   bio.textContent = 'Bio: ' + githubURL.data.bio;
 
+  /*extra code for the contribution chart*/
+  const contributionChart = document.createElement('img');
+  contributionChart.src = 'http://ghchart.rshah.org/' + username.textContent;
+
   card.classList.add('card');
   name.classList.add('name');
   username.classList.add('username');
+  contributionChart.classList.add('contributionChart');
 
   card.append(image);
   card.append(cardInfo);
@@ -123,6 +138,7 @@ function createCard(githubURL){
   cardInfo.append(followers);
   cardInfo.append(following);
   cardInfo.append(bio);
+  cardInfo.append(contributionChart);
 
   return card;
 }

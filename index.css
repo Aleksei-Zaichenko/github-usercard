@@ -81,7 +81,6 @@ body {
 .header img {
   width: 150px;
   height: 150px;
-  object-fit: contain;
 }
 
 .header p {
@@ -107,6 +106,8 @@ body {
   height: 150px;
   border-radius: 3px;
   margin-right: 20px;
+  
+  object-fit: fill;
 }
 
 .card .name {
@@ -124,5 +125,11 @@ body {
   margin: 3px 0 10px;
 }
 
+/*made extra class for the contribution chart*/
+.card .contributionChart {
+  width: 100%;
+  height: 160px;
 
+  padding-top: 2%;
+}
 
