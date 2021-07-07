@@ -3,6 +3,13 @@
            https://api.github.com/users/<your name>
 */
 
+/*
+axios.get("https://api.github.com/users/Aleksei-Zaichenko")
+.then(response => {
+  console.log(response.data);
+})
+*/
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -13,6 +20,15 @@
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+
+const cards = document.querySelector('.cards');
+
+axios.get("https://api.github.com/users/Aleksei-Zaichenko")
+.then(response => {
+  cards.append(createCard(response));
+}).catch(error => {
+  console.log("the data was not returned", error);
+})
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -25,6 +41,20 @@
 */
 
 const followersArray = [];
+
+ axios.get("https://api.github.com/users/Aleksei-Zaichenko/followers")
+    .then(response => {
+      response.data.forEach(item => {
+        axios.get(item.url)
+        .then( response =>{
+          cards.append(createCard(response));
+      }).catch(error => {
+           console.log("the data was not returned", error);
+          })
+      })//response.data.forEach
+    }).catch(error => {
+            console.log("the data was not returned", error);
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +83,53 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+function createCard(githubURL){
+
+  const card = document.createElement('div');
+  const image = document.createElement('img');
+
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const username = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const linkGithubPage = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+  image.src = githubURL.data.avatar_url;
+  name.textContent = githubURL.data.name;
+  username.textContent = githubURL.data.login;
+  location.textContent = 'Location: ' + githubURL.data.location;
+  profile.textContent = 'Profile: ';
+  linkGithubPage.textContent = githubURL.data.url;
+  followers.textContent = 'Followers: ' + githubURL.data.followers;
+  following.textContent = 'Following: ' + githubURL.data.following;
+  bio.textContent = 'Bio: ' + githubURL.data.bio;
+
+  /*extra code for the contribution chart*/
+  const contributionChart = document.createElement('img');
+  contributionChart.src = 'http://ghchart.rshah.org/' + username.textContent;
+
+  card.classList.add('card');
+  name.classList.add('name');
+  username.classList.add('username');
+  contributionChart.classList.add('contributionChart');
+
+  card.append(image);
+  card.append(cardInfo);
+
+  cardInfo.append(name);
+  cardInfo.append(username);
+  cardInfo.append(location);
+  cardInfo.append(profile);
+  profile.append(linkGithubPage);
+  cardInfo.append(followers);
+  cardInfo.append(following);
+  cardInfo.append(bio);
+  cardInfo.append(contributionChart);
+
+  return card;
+}
